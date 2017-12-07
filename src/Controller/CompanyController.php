@@ -57,4 +57,26 @@ class CompanyController extends Controller
         // in the template, print things with {{ product.name }}
         // return $this->render('product/show.html.twig', ['product' => $company]);
     }
+    
+    /**
+     * @Route("/company/edit/{id}")
+     */
+    public function updateAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $company = $em->getRepository(Company::class)->find($id);
+
+        if (!$company) {
+            throw $this->createNotFoundException(
+                'No product found for id '.$id
+            );
+        }
+
+        $company->setName('New company name!');
+        $em->flush();
+
+        return $this->redirectToRoute('company_show', [
+            'id' => $company->getId()
+        ]);
+    }
 }
